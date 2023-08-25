@@ -13,9 +13,14 @@ class CarnahanStarling():
             [-0.50272, -3.1935, 2.0883, -56.6377, -3264.61, 4518.2, 0],
             [8.0956883, 3.7090, 0, 40.53683, 2556.181, 4241.6, 0]
         ], dtype=float)
+
     @property
-    def diameter(self):
+    def diameter(self) -> Union[float, np.ndarray]:
         return self.__diameter
+    
+    @property
+    def phi(self) -> Union[float, np.ndarray]:
+        return self.__phi
     
     def packing_fraction(self, density: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
         eta = density*np.pi*(self.diameter**3)/6
@@ -42,5 +47,10 @@ class CarnahanStarling():
         alpha = C*((1/(lambda_a-3))-(1/(lambda_r-3)))
         return alpha
 
-    def f(self, alpha: Union[float, np.ndarray]) -> np.ndarray:
-        pass
+    def f_i(self, alpha: Union[float, np.ndarray], i: int) -> Union[float, np.ndarray]:
+        phi_i = self.phi[i, :]
+        f_i = (
+            (phi_i[0] + phi_i[1]*(alpha**1) + phi_i[2]*(alpha**2) + phi_i[3]*(alpha**3))
+            /(1 + phi_i[4]*alpha + phi_i[5]*(alpha**2) + phi_i[6]*(alpha**3))
+        )
+        return f_i
