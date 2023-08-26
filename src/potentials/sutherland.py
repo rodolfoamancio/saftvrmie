@@ -49,8 +49,8 @@ class Sutherland():
         effective_packing_fraction = np.matmul(c.T, eta_powers).T
         return effective_packing_fraction
     
-    def first_order_perturbation_therm(self, packing_fraction: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
-        first_order_perturbation_therm = (
+    def first_order_perturbation_term(self, packing_fraction: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
+        first_order_perturbation_term = (
             -12*self.potential_depth*packing_fraction
             *(1/(self.interaction_power - 3))
             *(
@@ -58,4 +58,4 @@ class Sutherland():
                 /((1 - self.effective_packing_fraction(packing_fraction))**3)
             )
         )
-        return first_order_perturbation_therm
+        return first_order_perturbation_term
