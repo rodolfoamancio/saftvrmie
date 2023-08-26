@@ -1,10 +1,12 @@
-
+import numpy as np
+from typing import Union
+from constants.constants import BOLTZMANN
 
 class Mie():
     def __init__(
             self,
-            repulsive_power: int,
             attractive_power: int,
+            repulsive_power: int,
             segment_diameter: float,
             potential_depth: float
         ):
@@ -40,3 +42,23 @@ class Mie():
     @property
     def C(self):
         return self.__C
+    
+    def potential(self, distance: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
+        potential = self.C*self.potential_depth*BOLTZMANN*(
+            ((self.segment_diameter/distance)**self.repulsive_power)
+            -((self.segment_diameter/distance)**self.attractive_power)
+        )
+        return potential
+    
+    def effective_diameter(self, beta: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
+        distance = np.linspace(0, 1, 100, endpoint=True)
+        h = distance[1] - distance[0]
+        potential = self.potential(distance) # shape (100,)
+        if not isinstance(beta, np.ndarray):
+            beta = np.array([beta])
+        # beta shape (1,) or (l,)
+        y = (1 - np.exp(-np.matmul(beta*potential)))
+        # shape (l, 100)
+        # trapezoidal rule for integration
+        d = (h / 2) * (y[:, 0] + 2 * np.sum(y[:, 1:-1], axis=1) + y[:, -1])
+        return d
