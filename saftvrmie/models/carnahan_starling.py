@@ -39,7 +39,7 @@ class CarnahanStarling():
         )
         return k_hs
     
-    def alpha(self, lambda_a: Union[float, np.ndarray], lambda_r: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
+    def alpha(self, lambda_a: int, lambda_r: int) -> float:
         C = (
             (lambda_r/(lambda_r - lambda_a))
             *((lambda_r/lambda_a)**(lambda_a/(lambda_r-lambda_a)))
@@ -47,25 +47,33 @@ class CarnahanStarling():
         alpha = C*((1/(lambda_a-3))-(1/(lambda_r-3)))
         return alpha
 
-    def __alpha_powers(self, alpha: Union[float, np.ndarray]) -> np.ndarray:
-        # returns an np.ndarray with shape (4, length_alpha)
-        if not isinstance(alpha, np.ndarray):
-            alpha = np.array([alpha])
-        
+    def __alpha_powers(self, alpha: float) -> np.ndarray:
+        alpha = np.array([alpha])
         powers = np.arange(4)
         alpha_col = alpha[:, np.newaxis]
         result = alpha_col**powers
         return result.T
     
-    def f(self, alpha: Union[float, np.ndarray]) -> np.ndarray:
-
+    def __f(self, alpha: float) -> np.ndarray:
         alpha_powers = self.__alpha_powers(alpha)
-
-        # (6 x 4) x (4, length_alpha) = (6 x length_alpha)
+        # (6 x 4) x (4, ) = (6, )
         numerator = np.matmul(self.phi[:4, :].T*alpha_powers)
-        # (6 x 3) x (3, length_alpha) = (6 x length_alpha)
-        demonimator = 1 + np.matmul(self.phi[4:, :].T*alpha_powers[1:, :])
+        # (6 x 3) x (3, ) = (6, )
+        demonimator = 1 + np.matmul(self.phi[4:, :].T*alpha_powers[1:])
 
-        # final result, shape: (6 x length_alpha)
+        # final result, shape: (6, )
         f = (numerator/demonimator)
         return f
+    
+    def correction_factor(self, alpha: float, packing_fraction: Union[float, np.ndarray], x0: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
+        if isinstance(packing_fraction, np.ndarray):
+            packing_fraction = packing_fraction[:, np.newaxis]
+
+        f = self.__f(alpha)
+
+        correction_factor = (
+            f[0]*packing_fraction*(x0**3)
+            +f[3]*((packing_fraction*(x0**3))**5)
+            +f[4]*((packing_fraction*(x0**3))**8)
+        )
+        return correction_factor
