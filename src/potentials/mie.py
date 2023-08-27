@@ -50,15 +50,22 @@ class Mie():
         )
         return potential
     
-    def effective_diameter(self, beta: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
-        distance = np.linspace(0, 1, 100, endpoint=True)
-        h = distance[1] - distance[0]
-        potential = self.potential(distance) # shape (100,)
+    def __aux_function(self, beta: Union[float, np.ndarray], distance: np.ndarray) -> np.ndarray:
         if not isinstance(beta, np.ndarray):
-            beta = np.array([beta])
-        # beta shape (1,) or (l,)
-        y = (1 - np.exp(-np.matmul(beta*potential)))
-        # shape (l, 100)
+            beta = np.array([beta])[:, np.newaxis]
+        # beta shape: (lenght_beta, 1)
+        # distance shape: (length_distance, 1)
+        aux_function = np.where(
+            distance > 0,
+            (1 - np.exp(-np.matmul(beta*distance.T))),
+            1
+        )
+        return aux_function
+    
+    def effective_diameter(self, beta: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
+        distance = np.linspace(0, 1, 100, endpoint=True)[:, np.newaxis]
+        h = distance[1] - distance[0]
+        y = self.__aux_function(beta, distance)
         # trapezoidal rule for integration
         d = (h / 2) * (y[:, 0] + 2 * np.sum(y[:, 1:-1], axis=1) + y[:, -1])
         return d
