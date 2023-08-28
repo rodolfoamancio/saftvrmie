@@ -104,8 +104,8 @@ class SAFTVRMie():
         packing_fraction = carnahan_starling.packing_fraction(density) # shape: (length_density, )
 
         # first order Sutherland terms
-        a1S_attractive = sutherland_attractive.first_order_perturbation_term(packing_fraction) # shape: (length_density, )
-        a1S_repulsive = sutherland_repulsive.first_order_perturbation_term(packing_fraction) # shape: (length_density, )
+        a1S_attractive = sutherland_attractive.first_order_perturbation_term(packing_fraction)[:, np.newaxis] # shape: (length_density, 1)
+        a1S_repulsive = sutherland_repulsive.first_order_perturbation_term(packing_fraction)[:, np.newaxis] # shape: (length_density, 1)
 
         # diameter
         diameter = self.mie.effective_diameter(beta) # shape: (length_beta, )
@@ -114,13 +114,13 @@ class SAFTVRMie():
         x0 = self.x0(diameter) # shape: (length_beta, )
 
         # B
-        B_attractive = self.__B(self.attractive_power, packing_fraction, x0)
-        B_repulsive = self.__B(self.repulsive_power, packing_fraction, x0)
+        B_attractive = self.__B(self.attractive_power, packing_fraction, x0) # shape: (length_beta, length_density)
+        B_repulsive = self.__B(self.repulsive_power, packing_fraction, x0) # shape: (length_beta, length_density)
 
-        # a1
+        # # a1
         a1 = self.C*(
-            ((x0**self.attractive_power)*(a1S_attractive + B_attractive))
-            -((x0**self.repulsive_power)*(a1S_repulsive + B_repulsive))
+            ((x0[:, np.newaxis]**self.attractive_power)*(a1S_attractive + B_attractive.T).T)
+            -((x0[:, np.newaxis]**self.repulsive_power)*(a1S_repulsive + B_repulsive.T).T)
         )
         return a1
 
