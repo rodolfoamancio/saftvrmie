@@ -1,10 +1,9 @@
 import numpy as np
 from typing import Union
 
-from saftvrmie.constants.constants import BOLTZMANN
-from saftvrmie.potentials.mie import Mie
-from saftvrmie.potentials.sutherland import Sutherland
-from saftvrmie.models.carnahan_starling import CarnahanStarling
+from saftvrmie.constants import BOLTZMANN
+from saftvrmie.potentials import Mie, Sutherland
+from saftvrmie.models import CarnahanStarling
 
 class SAFTVRMie():
     def __init__(
@@ -75,7 +74,7 @@ class SAFTVRMie():
         J = self.__J(interaction_power, x0).reshape(x0.shape[0], 1)
 
         B = (
-            1*packing_fraction*self.potential_depth*BOLTZMANN*(
+            12*packing_fraction*self.potential_depth*BOLTZMANN*(
                 I*(
                     (1-packing_fraction/2)
                     /((1-packing_fraction)**3)
@@ -85,7 +84,7 @@ class SAFTVRMie():
                     /(2*((1-packing_fraction)**3))
                 )
             )
-        )
+        ).T
         return B
     
     def first_order_perturbation_term(self, beta: Union[float, np.ndarray], density: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
@@ -119,8 +118,8 @@ class SAFTVRMie():
 
         # # a1
         a1 = self.C*(
-            ((x0[:, np.newaxis]**self.attractive_power)*(a1S_attractive + B_attractive.T).T)
-            -((x0[:, np.newaxis]**self.repulsive_power)*(a1S_repulsive + B_repulsive.T).T)
+            ((x0[:, np.newaxis]**self.attractive_power)*(a1S_attractive + B_attractive).T)
+            -((x0[:, np.newaxis]**self.repulsive_power)*(a1S_repulsive + B_repulsive).T)
         )
         return a1
 
@@ -143,20 +142,20 @@ class SAFTVRMie():
         alpha = carnahan_starling.alpha(self.attractive_power, self.repulsive_power)
 
         # K HS
-        compressibility_factor = carnahan_starling.compressibility_factor(density)
+        compressibility_factor = carnahan_starling.compressibility_factor(density)[:, np.newaxis] # shape: (length_density, 1)
 
         # correction factor
-        correction_factor = carnahan_starling.correction_factor(alpha, packing_fraction, x0)
+        correction_factor = carnahan_starling.correction_factor(alpha, packing_fraction, x0) # shape: (length_density, lenght_beta)
 
         # a1
-        a1S_2a = sutherland_2a.first_order_perturbation_term(packing_fraction)
-        a1S_2r = sutherland_2r.first_order_perturbation_term(packing_fraction)
-        a1S_ar = sutherland_ar.first_order_perturbation_term(packing_fraction)
+        a1S_2a = sutherland_2a.first_order_perturbation_term(packing_fraction)[:, np.newaxis] # shape: (length_density, 1) 
+        a1S_2r = sutherland_2r.first_order_perturbation_term(packing_fraction)[:, np.newaxis] # shape: (length_density, 1)
+        a1S_ar = sutherland_ar.first_order_perturbation_term(packing_fraction)[:, np.newaxis] # shape: (length_density, 1)
 
         # B
-        B_2a = self.__B(2*self.attractive_power, packing_fraction, x0)
-        B_2r = self.__B(2*self.repulsive_power, packing_fraction, x0)
-        B_ar = self.__B(self.attractive_power + self.repulsive_power, packing_fraction, x0)
+        B_2a = self.__B(2*self.attractive_power, packing_fraction, x0) # shape: (length_density, length_beta)
+        B_2r = self.__B(2*self.repulsive_power, packing_fraction, x0) # shape: (length_density, length_beta)
+        B_ar = self.__B(self.attractive_power + self.repulsive_power, packing_fraction, x0) # shape: (length_density, length_beta)
 
         # a2
         a2 = (
@@ -165,5 +164,5 @@ class SAFTVRMie():
                 -2*(((x0**(self.attractive_power+self.repulsive_power)))*(a1S_ar + B_ar))
                 +((x0**(2*self.repulsive_power))*(a1S_2r + B_2r))
             )
-        )
+        ).T
         return a2
