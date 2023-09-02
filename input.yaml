@@ -24,6 +24,12 @@ repulsive_exponent: 13.650
 # attractive exponent
 attractive_exponent: 6
 
+# segments_per_chain
+ms: 1.8514
+
+# molar mass in g/mol
+molar_mass: 58.12
+
 # --------------------------------------------
 # --------- SIMULATION PARAMETERS ------------
 # --------------------------------------------
