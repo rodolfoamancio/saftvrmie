@@ -1,7 +1,7 @@
 import numpy as np
 import yaml
 
-from typing import Union, Self
+from typing import Union
 
 class Reader():
     @property
@@ -25,6 +25,14 @@ class Reader():
         return self.__attractive_exponent
     
     @property
+    def ms(self) -> float:
+        return self.__ms
+    
+    @property
+    def molar_mass(self) -> float:
+        return self.__molar_mass
+    
+    @property
     def temperature(self) -> Union[float, np.ndarray]:
         return self.__temperature
     
@@ -36,25 +44,29 @@ class Reader():
     def output_filename(self) -> str:
         return self.__output_filename
 
-    @classmethod
-    def read(self, yaml_path: str) -> Self: 
-        self.__yaml_path = yaml_path
-        with yaml.load(self.__yaml_path, Loader=yaml.SafeLoader()) as loader:
+    @staticmethod
+    def read(yaml_path: str) -> 'Reader': 
+        reader = Reader()
+        reader.__yaml_path = yaml_path
+        with open(yaml_path, "r") as file:
+            loader = yaml.safe_load(file)
             # molecule parameters
-            self.__segment_diameter = loader["segment_diameter"]
-            self.__potential_depth = loader["potential_depth"]
-            self.__repulsive_exponent = loader["repulsive_exponent"]
-            self.__attractive_exponent = loader["attractive_exponent"]
+            reader.__segment_diameter = loader["segment_diameter"]
+            reader.__potential_depth = loader["potential_depth"]
+            reader.__repulsive_exponent = loader["repulsive_exponent"]
+            reader.__attractive_exponent = loader["attractive_exponent"]
+            reader.__ms = loader["ms"]
+            reader.__molar_mass = loader["molar_mass"]
             
             # simulation parameters
-            self.__temperature = loader["temperature"]
-            if isinstance(self.__temperature, list):
-                self.__temperature = np.array(loader["temperature"])
+            reader.__temperature = loader["temperature"]
+            if isinstance(reader.__temperature, list):
+                reader.__temperature = np.array(loader["temperature"])
             
-            self.__density = loader["density"]
-            if isinstance(self.__density, list):
-                self.__density = np.array(loader["density"])
+            reader.__density = loader["density"]
+            if isinstance(reader.__density, list):
+                reader.__density = np.array(loader["density"])
 
             # output options
-            self.__output_filename = loader["output_filename"]
-        return self
+            reader.__output_filename = loader["output_filename"]
+        return reader
