@@ -86,7 +86,7 @@ class SAFTVRMie():
         ).T
         return B
     
-    def first_order_perturbation_term(self, beta: Union[float, np.ndarray], density: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
+    def first_order_perturbation_term(self, beta: Union[float, np.ndarray], density: Union[float, np.ndarray]) -> np.ndarray:
 
         if not isinstance(beta, np.ndarray):
             beta = np.array([beta])
@@ -122,7 +122,14 @@ class SAFTVRMie():
         )
         return a1
 
-    def second_order_perturbation_term(self, beta: Union[float, np.ndarray], density: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
+    def second_order_perturbation_term(self, beta: Union[float, np.ndarray], density: Union[float, np.ndarray]) -> np.ndarray:
+
+        if not isinstance(beta, np.ndarray):
+            beta = np.array([beta])
+
+        if not isinstance(density, np.ndarray):
+            density = np.array([density])
+        
         carnahan_starling = CarnahanStarling(self.segment_diameter)
         sutherland_2a = Sutherland(2*self.attractive_exponent, self.segment_diameter, self.potential_depth)
         sutherland_2r = Sutherland(2*self.repulsive_exponent, self.segment_diameter, self.potential_depth)
@@ -158,7 +165,14 @@ class SAFTVRMie():
 
         # a2
         a2 = (
-            (0.5*compressibility_factor*(1+correction_factor)*self.potential_depth*(self.C**2))*(
+            (
+                0.5
+                *compressibility_factor
+                *(1+correction_factor)
+                *(self.potential_depth*BOLTZMANN)
+                *(self.C**2)
+            )
+            *(
                 ((x0**(2*self.attractive_exponent))*(a1S_2a + B_2a))
                 -2*(((x0**(self.attractive_exponent+self.repulsive_exponent)))*(a1S_ar + B_ar))
                 +((x0**(2*self.repulsive_exponent))*(a1S_2r + B_2r))
