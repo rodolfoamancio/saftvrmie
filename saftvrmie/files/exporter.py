@@ -3,7 +3,7 @@ import numpy as np
 from typing import Union
 
 from saftvrmie.files import Reader
-from saftvrmie.constants import BOLTZMANN
+from saftvrmie.constants import BOLTZMANN, ANGSTRON, KILOGRAM, AVOGADRO
 
 class Exporter():
     @staticmethod
@@ -30,12 +30,21 @@ class Exporter():
             )
             .assign(
                 a1_dimensionless = lambda df: df["a1"]/(reader.potential_depth*BOLTZMANN),
-                a2_dimensionless = lambda df: df["a2"]/(reader.potential_depth*BOLTZMANN),
+                a2_dimensionless = lambda df: df["a2"]/((reader.potential_depth*BOLTZMANN)**2),
                 segment_diameter = reader.segment_diameter,
                 potential_depth = reader.potential_depth,
                 repulsive_exponent = reader.repulsive_exponent,
                 attractive_exponent = reader.attractive_exponent,
-                input_filename = reader.yaml_path
+                input_filename = reader.yaml_path,
+                temperature_dimensionless = lambda df: df["temperature"]/reader.potential_depth,
+                density_dimensionless = lambda df: (
+                    df["density"] # density in kg/m³
+                    *KILOGRAM # g/m³
+                    *(1/reader.molar_mass) # mol/m³
+                    *AVOGADRO # molecules/m³
+                    *reader.ms # segments/m³
+                    *((reader.segment_diameter*ANGSTRON)**3) # dimensionless unit
+                )
             )
         )
         df_results.to_csv(f"{reader.output_filename}.csv", index=False)
