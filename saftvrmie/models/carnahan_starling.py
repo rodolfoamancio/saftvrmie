@@ -33,7 +33,7 @@ class CarnahanStarling():
         Returns:
         - eta: float or np.ndarray - The calculated packing fraction.
         """
-        eta = density * np.pi * ((self.diameter * ANGSTRON) ** 3) / 6
+        eta = density * np.pi * ((self.diameter) ** 3) / 6
         return eta
     
     def helmholtz_energy(self, density: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
@@ -63,7 +63,7 @@ class CarnahanStarling():
         eta = self.packing_fraction(density)
         k_hs = (
             ((1 - eta) ** 4)
-            * (1 + 4 * eta + 4 * (eta ** 2) - 4 * (eta ** 3) + (eta ** 4))
+            /(1 + 4 * eta + 4 * (eta ** 2) - 4 * (eta ** 3) + (eta ** 4))
         )
         return k_hs
     
@@ -145,7 +145,7 @@ class CarnahanStarling():
 
         correction_factor = (
             f[0] * packing_fraction * (x0 ** 3)
-            + f[3] * ((packing_fraction * (x0 ** 3)) ** 5)
-            + f[4] * ((packing_fraction * (x0 ** 3)) ** 8)
+            + f[1] * ((packing_fraction * (x0 ** 3)) ** 5)
+            + f[2] * ((packing_fraction * (x0 ** 3)) ** 8)
         )
         return correction_factor
