@@ -36,13 +36,18 @@ def run_simulation(filename):
     print(output_string)
 
     # Converting data
-    beta = 1/BOLTZMANN*reader.temperature
+    print("Convering units")
+    beta = 1/(BOLTZMANN*reader.temperature)
     density = (
-        (reader.density*KILOGRAM/(ANGSTRON**3)) # converts to g/m³
+        (reader.density*KILOGRAM) # converts to g/m³
         /(reader.molar_mass) # converts to mol/m³
         *AVOGADRO # converts to molecules per m³
         *reader.ms # converts to segments per m³
+        *(ANGSTRON**3)
     )
+
+    print("Beta", beta, "1/J")
+    print("Density", density, "segments/A³")
 
     # SAFT Simulation
     print("Simulation starting")
@@ -57,7 +62,7 @@ def run_simulation(filename):
     print("Perturbation terms calculated\n")
 
     # Exporting data
-    exporter = Exporter().export(
+    Exporter().export(
         reader,
         a1,
         a2
