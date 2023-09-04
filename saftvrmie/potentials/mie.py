@@ -9,8 +9,8 @@ class Mie():
     """
     def __init__(
             self,
-            attractive_exponent: int,
-            repulsive_exponent: int,
+            attractive_exponent: float,
+            repulsive_exponent: float,
             segment_diameter: float,
             potential_depth: float
         ):
@@ -37,28 +37,28 @@ class Mie():
         )
 
     @property
-    def repulsive_power(self):
+    def repulsive_power(self) -> float:
         """
         Get the repulsive power.
         """
         return self.__repulsive_power
 
     @property
-    def attractive_power(self):
+    def attractive_power(self) -> float:
         """
         Get the attractive power.
         """
         return self.__attractive_power
 
     @property
-    def segment_diameter(self):
+    def segment_diameter(self) -> float:
         """
         Get the segment diameter.
         """
         return self.__segment_diameter
     
     @property
-    def potential_depth(self):
+    def potential_depth(self) -> float:
         """
         Get the potential depth.
         """
