@@ -6,12 +6,26 @@ from saftvrmie.files import Reader
 from saftvrmie.constants import BOLTZMANN, ANGSTRON, KILOGRAM, AVOGADRO
 
 class Exporter():
+    """
+    Class for exporting data
+    """
     @staticmethod
     def export(
         reader: Reader,
         first_order_perturbation_term: Union[float, np.ndarray],
         second_order_perturbation_term: Union[float, np.ndarray],
     ) -> None:
+        """
+        Method for exporting data to csv
+
+        Parameters:
+        - reader: Reader - The reader class with simulation parameters
+        - first_order_perturbation_term: Union[float, np.ndarray] - First order perturbation terms results
+        - second_order_perturbation_term: Union[float, np.ndarray] - Second order perturbation terms results
+
+        Returns:
+        None
+        """
         df_a1 = pd.DataFrame({
             "temperature":np.repeat(reader.temperature, first_order_perturbation_term.shape[1]),
             "density":np.tile(reader.density, first_order_perturbation_term.shape[0]),
