@@ -1,3 +1,25 @@
+"""
+This script is used for running a simulation.
+
+It requires a .yaml input file containing:
+- Molecule parameters
+    - Segment diameter in A
+    - Potential depth in K
+    - Attractive exponent
+    - Repulsive exponent
+    - ms: the number of segments per molecule
+    - molar mass in g/mol
+- Simulation setup
+    - Density in kg/m³
+    - Temperature in K
+- Output file
+    - output_filename for generating the corresponding .csv file
+
+Usage:
+
+$ python run_simulation.py <path/to/input>
+"""
+
 import pandas as pd
 import numpy as np
 from argparse import ArgumentParser
@@ -7,6 +29,12 @@ from saftvrmie.models import SAFTVRMie
 from saftvrmie.constants import BOLTZMANN, ANGSTRON, KILOGRAM, AVOGADRO
 
 def parse_args():
+    """
+    Function to parse argments from command line
+
+    Returns 
+    - args: a dict object containing the relevant fields
+    """
     parser = ArgumentParser(
         prog="Run simulation",
         description="Run SAFT-VR Mie simulation for perturbation terms"
@@ -16,7 +44,16 @@ def parse_args():
     return args
 
 
-def run_simulation(filename):
+def run_simulation(filename: str) -> None:
+    """
+    Function to run the simulation
+
+    Inputs:
+    - filename: str - the .yaml input filename
+
+    Returns
+    None
+    """
     # Reading input
     reader = Reader.read(filename)
     output_string = (
@@ -70,6 +107,9 @@ def run_simulation(filename):
     print("Data exported")
 
 if __name__ == "__main__":
+    """
+    Main execution routine
+    """
     print("SAFT-VR Mie Simulation")
     
     # Parse arguments
