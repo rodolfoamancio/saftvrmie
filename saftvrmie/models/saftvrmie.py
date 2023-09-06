@@ -6,13 +6,25 @@ from saftvrmie.potentials import Mie, Sutherland
 from saftvrmie.models import CarnahanStarling
 
 class SAFTVRMie():
+    """
+    SAFT-VR Mie class
+    """
     def __init__(
             self,
-            attractive_exponent: int,
-            repulsive_exponent: int,
+            attractive_exponent: float,
+            repulsive_exponent: float,
             segment_diameter: float,
             potential_depth: float
         ):
+        """
+        Initializes the SAFT-VR Mie class
+
+        Parameters:
+        - attractive_exponent: int - The exponent for the attractive power term in the Mie potential equation.
+        - repulsive_exponent: int - The exponent for the repulsive power term in the Mie potential equation.
+        - segment_diameter: float - The diameter of the segment in the Mie potential equation.
+        - potential_depth: float - The depth of the potential well in the Mie potential equation.
+        """
         self.__attractive_exponent = attractive_exponent
         self.__repulsive_exponent = repulsive_exponent
         self.__segment_diameter = segment_diameter
@@ -27,34 +39,64 @@ class SAFTVRMie():
         self.__C = self.mie.C
 
     @property
-    def attractive_exponent(self) -> int:
+    def attractive_exponent(self) -> float:
+        """
+        Get the attractive power.
+        """
         return self.__attractive_exponent
     
     @property
-    def repulsive_exponent(self) -> int:
+    def repulsive_exponent(self) -> float:
+        """
+        Get the repulsive power.
+        """
         return self.__repulsive_exponent
 
     @property
     def segment_diameter(self) -> float:
+        """
+        Get the segment diameter.
+        """
         return self.__segment_diameter
     
     @property
     def potential_depth(self) -> float:
+        """
+        Get the potential depth.
+        """
         return self.__potential_depth
 
     @property
     def C(self) -> float:
+        """
+        Get the constant C in the Mie potential equation.
+        """
         return self.__C
 
     @property
     def mie(self) -> Mie:
+        """
+        Get the corresponding Mie potential object from the SAFT-VR Mie EoS
+        """
         return self.__mie
 
     def x0(self, diameter: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
+        """
+        Computes the reduced diameter
+
+        Parameters:
+        - diameter: float or np.ndarray - The input diameter
+
+        Returns:
+        - x0: the reduced diameter
+        """
         x0 = self.segment_diameter/diameter
         return x0
 
     def __I(self, interaction_exponent: int, x0: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
+        """
+        Computes the term I from the SAFT-VR Mie EoS. 
+        """
         I = -(
             (x0**(3-interaction_exponent)-1)
             /(interaction_exponent-3)
