@@ -1,0 +1,67 @@
+# --------------------------------------------
+# --------------- INPUT FILE -----------------
+# --------------------------------------------
+
+# Input file for SAFT-VR Mie simulation
+# This is not a complete implementation the
+# EOS, the sole purpose is to calculate the
+# first two perturbation terms following the
+# equations presented in Laffite, 2013.
+
+# --------------------------------------------
+# ---------- MOLECULE PARAMETERS -------------
+# --------------------------------------------
+
+# segment diameter in Angstron
+segment_diameter: 3.9056
+
+# potential depth in K
+potential_depth: 239.89
+
+# repulsive exponent
+repulsive_exponent: 13.006
+
+# attractive exponent
+attractive_exponent: 6
+
+# segments_per_chain
+ms: 1.6845
+
+# molar mass in g/mol
+molar_mass: 44.097
+
+# --------------------------------------------
+# --------- SIMULATION PARAMETERS ------------
+# --------------------------------------------
+
+# temperature in K for running the simulation,
+# can be either a single value or a list of 
+# valules, e.g:
+#   temperature: 500
+# or
+#   temperature: [400, 500, 600]
+# or
+#   temperature:
+#     - 400
+#     - 500
+#     - 600
+temperature: 600
+
+# density in kg/m³ for running the simulation,
+# can be either a single value or a list of 
+# valules, e.g:
+#   density: 100
+# or
+#   density: [100, 200, 300]
+# or
+#   density:
+#     - 100
+#     - 200
+#     - 300
+density: [50, 66, 83, 100, 116, 133, 150, 166, 183, 200, 216, 233, 250, 266, 283, 300]
+
+# --------------------------------------------
+# ------------- OUTPUT OPTIONS ---------------
+# --------------------------------------------
+output_filename: c3
+# --------------------------------------------
