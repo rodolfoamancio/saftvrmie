@@ -6,6 +6,8 @@ from saftvrmie.constants.constants import BOLTZMANN
 class Mie():
     """
     Class for Mie potential calculations.
+    Based on Lafitte, Thomas, et al. "Accurate statistical associating fluid theory 
+    for chain molecules formed from Mie segments." The Journal of chemical physics 139.15 (2013).
     """
     def __init__(
             self,
@@ -68,6 +70,7 @@ class Mie():
     def C(self):
         """
         Get the constant C in the Mie potential equation.
+        Reference: Equation 2 from Lafitte, 2013.
         """
         return self.__C
     
@@ -80,8 +83,9 @@ class Mie():
 
         Returns:
         - potential: float or np.ndarray - The calculated potential(s).
+
+        Reference: Equation 1 from Lafitte, 2013.
         """
-        BOLTZMANN = 1.380649e-23 # Boltzmann constant
         
         potential = self.C * self.potential_depth * BOLTZMANN * (
             ((self.segment_diameter / distance) ** self.repulsive_power)
@@ -116,6 +120,8 @@ class Mie():
 
         Returns:
         - d: float or np.ndarray - The calculated effective diameter(s).
+
+        Reference: Equation 7 from Lafitte, 2013.
         """
         distance = np.linspace(0, self.segment_diameter, 100, endpoint=True)[:, np.newaxis]
         distance = distance + 1E-10
