@@ -92,7 +92,7 @@ class SAFTVRMie():
         Returns:
         - x0: the reduced diameter
 
-        Reference: Equation 7 from Lafitte, 2013.
+        Reference: Equation 22 details from Lafitte, 2013.
         """
         x0 = self.segment_diameter/diameter
         return x0
