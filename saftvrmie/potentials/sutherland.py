@@ -6,6 +6,8 @@ from saftvrmie.constants import BOLTZMANN
 class Sutherland():
     """
     Class for Sutherland potential calculations.
+    Based on Lafitte, Thomas, et al. "Accurate statistical associating fluid theory 
+    for chain molecules formed from Mie segments." The Journal of chemical physics 139.15 (2013).
     """
     def __init__(
         self, 
@@ -73,6 +75,8 @@ class Sutherland():
 
         Returns:
         - effective_packing_fraction: float or np.ndarray - The calculated effective packing fraction.
+
+        Reference: Equations 40, 41 from Lafitte, 2013.
         """
         parameters = np.array([
             [0.81096, 1.7888, -37.578, 92.284],
@@ -95,6 +99,8 @@ class Sutherland():
 
         Returns:
         - first_order_perturbation_term: float or np.ndarray - The calculated first-order perturbation term.
+
+        Reference: Equation 39 from Lafitte, 2013.
         """
         first_order_perturbation_term = (
             -12 * self.potential_depth * BOLTZMANN * packing_fraction *
