@@ -6,6 +6,8 @@ from saftvrmie.constants.constants import ANGSTRON
 class CarnahanStarling():
     """
     Class for Carnahan-Starling equation of state calculations.
+    Based on Lafitte, Thomas, et al. "Accurate statistical associating fluid theory 
+    for chain molecules formed from Mie segments." The Journal of chemical physics 139.15 (2013).
     """
     def __init__(self, diameter: Union[float, np.ndarray]):
         """
@@ -32,6 +34,8 @@ class CarnahanStarling():
 
         Returns:
         - eta: float or np.ndarray - The calculated packing fraction.
+
+        Reference: Equation 11 details from Lafitte, 2013.
         """
         eta = density * np.pi * ((self.diameter) ** 3) / 6
         return eta
@@ -45,6 +49,8 @@ class CarnahanStarling():
 
         Returns:
         - a_hs: float or np.ndarray - The calculated Helmholtz energy.
+
+        Reference: Equation 11 from Lafitte, 2013.
         """
         eta = self.packing_fraction(density)
         a_hs = (4 * eta - 3 * (eta ** 2)) / ((1 - eta) ** 2)
@@ -59,6 +65,8 @@ class CarnahanStarling():
 
         Returns:
         - k_hs: float or np.ndarray - The calculated compressibility factor.
+
+        Reference: Equation 16 from Lafitte, 2013.
         """
         eta = self.packing_fraction(density)
         k_hs = (
@@ -77,6 +85,8 @@ class CarnahanStarling():
 
         Returns:
         - alpha: float - The calculated alpha.
+
+        Reference: Equation 18 from Lafitte, 2013.
         """
         C = (
             (lambda_r / (lambda_r - lambda_a))
@@ -110,6 +120,8 @@ class CarnahanStarling():
 
         Returns:
         - f: np.ndarray - The calculated f.
+
+        Reference: Equation 20 from Lafitte, 2013.
         """
         phi = np.array([
             [7.5365557, -359.44, 1550.9, -1.19932, -1911.28, 9236.9],
@@ -137,6 +149,8 @@ class CarnahanStarling():
 
         Returns:
         - correction_factor: float or np.ndarray - The calculated correction factor.
+
+        Reference: Equation 17 from Lafitte, 2013.
         """
         if isinstance(packing_fraction, np.ndarray):
             packing_fraction = packing_fraction[:, np.newaxis]
