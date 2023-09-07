@@ -49,6 +49,7 @@ class Exporter():
                 potential_depth = reader.potential_depth,
                 repulsive_exponent = reader.repulsive_exponent,
                 attractive_exponent = reader.attractive_exponent,
+                ms = reader.ms,
                 input_filename = reader.yaml_path,
                 temperature_dimensionless = lambda df: df["temperature"]/reader.potential_depth,
                 density_dimensionless = lambda df: (
