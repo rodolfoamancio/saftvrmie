@@ -8,6 +8,8 @@ from saftvrmie.models import CarnahanStarling
 class SAFTVRMie():
     """
     SAFT-VR Mie class
+    Based on Lafitte, Thomas, et al. "Accurate statistical associating fluid theory 
+    for chain molecules formed from Mie segments." The Journal of chemical physics 139.15 (2013).
     """
     def __init__(
             self,
@@ -89,6 +91,8 @@ class SAFTVRMie():
 
         Returns:
         - x0: the reduced diameter
+
+        Reference: Equation 7 from Lafitte, 2013.
         """
         x0 = self.segment_diameter/diameter
         return x0
@@ -96,6 +100,15 @@ class SAFTVRMie():
     def __I(self, interaction_exponent: int, x0: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
         """
         Computes the term I from the SAFT-VR Mie EoS. 
+
+        Parameters:
+        - interaction_exponent: int - the interaction exponent (lambda) for the potential
+        - x0: float or np.ndarray - the reduced distance(s)
+
+        Retunrs:
+        - I: float or np.ndarray - the I term
+
+        Reference: Equation 28 from Lafitte, 2013.
         """
         I = -(
             (x0**(3-interaction_exponent)-1)
@@ -104,6 +117,18 @@ class SAFTVRMie():
         return I
     
     def __J(self, interaction_exponent: int, x0: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
+        """
+        Computes the term I from the SAFT-VR Mie EoS. 
+
+        Parameters:
+        - interaction_exponent: int - the interaction exponent (lambda) for the potential
+        - x0: float or np.ndarray - the reduced distance(s)
+
+        Retunrs:
+        - I: float or np.ndarray - the I term
+
+        Reference: Equation 29 from Lafitte, 2013.
+        """
         J = -(
             ((x0**(4-interaction_exponent))*(interaction_exponent-3) - (x0**(3-interaction_exponent))*(interaction_exponent-4) - 1)
             /((interaction_exponent-3)*(interaction_exponent-4))
@@ -111,6 +136,19 @@ class SAFTVRMie():
         return J
     
     def __B(self, interaction_exponent: int, packing_fraction: Union[float, np.ndarray], x0: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
+        """
+        Computes the term B from the SAFT-VR Mie EoS. 
+
+        Parameters:
+        - interaction_exponent: int - the interaction exponent (lambda) for the potential
+        - packing_fraction: float or np.ndarray - the packing fraction value(s) of the system
+        - x0: float or np.ndarray - the reduced distance(s)
+
+        Retunrs:
+        - B: float or np.ndarray - the I term
+
+        Reference: Equation 33 from Lafitte, 2013.
+        """
         I = self.__I(interaction_exponent, x0).reshape(x0.shape[0], 1)
         J = self.__J(interaction_exponent, x0).reshape(x0.shape[0], 1)
 
@@ -129,7 +167,18 @@ class SAFTVRMie():
         return B
     
     def first_order_perturbation_term(self, beta: Union[float, np.ndarray], density: Union[float, np.ndarray]) -> np.ndarray:
+        """
+        Computes the first order perturbation term
 
+        Parameters:
+        - beta: float or np.ndarray - beta value(s) for calculating the perturbation terms
+        - density: float or np.ndarray - density value(s) in segments per A³ for calculating perturbation terms
+
+        Returns:
+        - a1: float - the pertubation term in J
+
+        Reference: Equation 34 from Lafitte, 2013.
+        """
         if not isinstance(beta, np.ndarray):
             beta = np.array([beta])
 
@@ -165,7 +214,18 @@ class SAFTVRMie():
         return a1
 
     def second_order_perturbation_term(self, beta: Union[float, np.ndarray], density: Union[float, np.ndarray]) -> np.ndarray:
+        """
+        Computes the second order perturbation term
 
+        Parameters:
+        - beta: float or np.ndarray - beta value(s) for calculating the perturbation terms
+        - density: float or np.ndarray - density value(s) in segments per A³ for calculating perturbation terms
+
+        Returns:
+        - a2: float - the pertubation term in J
+
+        Reference: Equation 36 from Lafitte, 2013.
+        """
         if not isinstance(beta, np.ndarray):
             beta = np.array([beta])
 
