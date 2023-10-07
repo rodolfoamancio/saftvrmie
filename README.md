@@ -4,6 +4,8 @@
 
 This repository centralizes the code used to compute perturbation thermos from the SAFT-VR Mie equation of state, this work is related to my master's of science dissertation, additional information can be found on:
 
+**Important**: This code implements only the calculation of the perturbation terms ($\tilde{a}_1$, $\tilde{a}_2$) of the SAFT-VR Mie correspondent to equations 34 and 36 of the reference paper.
+
 ## Running the program
 
 After clonin the repository, the first step is to install the `SAFTVRMie` library with. First, `cd` into the project folder and run:
