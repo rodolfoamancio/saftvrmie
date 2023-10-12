@@ -22,5 +22,21 @@ $ python <path_to_project>/scripts/run_simulation.py <path_to_input_file>.yaml
 
 Where `<path_to_input_file>.yaml` is the appropriate input file in `.yaml` extension.
 
+The .yml file follows this structure:
+
+```yaml
+segment_diameter: 3.7412
+potential_depth: 153.36
+repulsive_exponent: 12.650
+attractive_exponent: 6
+ms: 1
+molar_mass: 16.04
+
+temperature: 600
+
+density: 100
+output_filename: c1
+```
+
 ## References
 1. Lafitte T, Apostolakou A, Avendaño C, Galindo A, Adjiman CS, Müller EA, Jackson G. Accurate statistical associating fluid theory for chain molecules formed from Mie segments. J Chem Phys. 2013 Oct 21;139(15):154504. doi: 10.1063/1.4819786. PMID: 24160524.
