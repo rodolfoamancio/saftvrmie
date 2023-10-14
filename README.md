@@ -38,5 +38,16 @@ density: 100
 output_filename: c1
 ```
 
+Where the parameters are:
+- Mie potential parameters:
+  - Segment diameter ($\sigma$) corresponding to the particle diameter in $\mathring{A}$
+  - Potential depth ($\varepsilon) which is the potential depth
+  - Repulsive exponent ($\lambda_r$) and attractive exponent ($\lambda_a$): the exponents for the Mie potential
+- SAFT parameters:
+  - Number of particles per chain ($m_s$)
+- Molar mass in g/mol
+- Temperature in K
+- Density in kg/m³
+
 ## References
 1. Lafitte T, Apostolakou A, Avendaño C, Galindo A, Adjiman CS, Müller EA, Jackson G. Accurate statistical associating fluid theory for chain molecules formed from Mie segments. J Chem Phys. 2013 Oct 21;139(15):154504. doi: 10.1063/1.4819786. PMID: 24160524.
